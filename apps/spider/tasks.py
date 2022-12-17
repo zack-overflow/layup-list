@@ -31,7 +31,10 @@ def import_pending_crawled_data(crawled_data_pk):
 @task_utils.email_if_fails
 def crawl_medians():
     median_page_urls = medians.crawl_median_page_urls()
-    assert len(median_page_urls) == 10 # the registrar medians web page always keeps a list links to the past ten academic terms
+    if CURRENT_TERM == "23W":
+        assert len(median_page_urls) == 4 # special case since more recent terms have changed the number of medians listed
+    else:
+        assert len(median_page_urls) == 10 # the registrar medians web page always keeps a list links to the past ten academic terms
     for url in median_page_urls:
         crawl_term_median_page.delay(url)
     return median_page_urls
