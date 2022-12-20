@@ -314,27 +314,41 @@ def departments(request):
 
 @require_safe
 def course_search(request):
+    print request.GET 
+    sys.stdout.flush()
     query = request.GET.get("q", "").strip()
-    if len(query) < 3:
+    search_type = request.GET.get("searchselect", "")
+    print search_type
+    sys.stdout.flush()
+
+    if search_type == "courses":
+        if len(query) < 3:
+            return render(request, 'course_search.html', {
+                'query': query,
+                'courses': []
+            })
+        courses = Course.objects.search(query).prefetch_related(
+            'review_set', 'courseoffering_set', 'distribs')
+        if len(courses) == 1:
+            return redirect(courses[0])
+
+        if len(query) not in Course.objects.DEPARTMENT_LENGTHS:
+            courses = sorted(
+                courses, key=lambda c: c.review_set.count(), reverse=True)
+
         return render(request, 'course_search.html', {
+            'term': constants.CURRENT_TERM,
             'query': query,
-            'courses': []
+            'department': get_department_name(query),
+            'courses': courses,
         })
-    courses = Course.objects.search(query).prefetch_related(
-        'review_set', 'courseoffering_set', 'distribs')
-    if len(courses) == 1:
-        return redirect(courses[0])
+    elif search_type == "profs":
+        # figure out how many names
 
-    if len(query) not in Course.objects.DEPARTMENT_LENGTHS:
-        courses = sorted(
-            courses, key=lambda c: c.review_set.count(), reverse=True)
-
-    return render(request, 'course_search.html', {
-        'term': constants.CURRENT_TERM,
-        'query': query,
-        'department': get_department_name(query),
-        'courses': courses,
-    })
+        # potentially just search by last name
+        pass
+    else:
+        pass
 
 
 @require_safe

@@ -26,10 +26,25 @@
         {% endif %}
       </ul>
         <ul class="nav navbar-nav navbar-right">
+            
             <form class="navbar-form navbar-left" action="{% url 'course_search' %}" method="get" role="search">
-                <div class="form-group">
+                <div class="form-group" style="display: flex;">
+                    <div class="input-group" style="display: flex; padding-right: 10px; align-items: center;">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                Select Search Type
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <input name= "searchselect" type="radio" id="coursesearch" class="searchradio" value="courses" checked>
+                                <label for="coursesearch">Search Courses</label><br>
+                                <input name= "searchselect" type="radio" id="profsearch" class="searchradio" value="profs">
+                                <label for="profsearch">Search Professors</label>
+                            </ul>
+                        </li>
+                    </div>
                     <div class="input-group">
-                        <input name="q" type="text" class="form-control" placeholder="Course Search...">
+                        <input name="q" type="text" class="form-control" id="navbarsearch" placeholder="Course Search...">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-default">Search</button>
                         </span>

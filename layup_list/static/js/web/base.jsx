@@ -31,4 +31,16 @@ LayupList.Web.Base = function() {
         }
     });
 
+    // gets the selected search type from the radio button in the navbar
+    // default option is to search for courses
+    // https://stackoverflow.com/questions/8622336/jquery-get-value-of-selected-radio-button
+    $(".searchradio").click(function() {
+        var navbarSearchBox = $("#navbarsearch");
+        var searchselectValue = $('input[name="searchselect"]:checked').val();
+        if (searchselectValue == "profs") {
+            navbarSearchBox.attr("placeholder", "Professor Search...");
+        } else {
+            navbarSearchBox.attr("placeholder", "Course Search...");
+        }
+    })
 };
